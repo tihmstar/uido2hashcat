@@ -194,7 +194,7 @@ int main_r(int argc, const char * argv[]) {
         printf("%02x",kb.salt[i]);
     }
     //iter
-    printf("$%06u",kb.iter);
+    printf("$%u",kb.iter);
     //class keys
     for (int i=0; i < kb.numKeys; i++){
         if (kb.keys[i].wrap & 2){

@@ -11,6 +11,7 @@
 #include <sys/stat.h>
 #include <unistd.h>
 #include <plist/plist.h>
+#include <string.h>
 
 plist_t readPlistFromFile(const char *filePath){
     int fd = -1;

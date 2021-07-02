@@ -12,6 +12,7 @@
 #include <unistd.h>
 #include <plist/plist.h>
 #include <string.h>
+#include <arpa/inet.h>
 
 plist_t readPlistFromFile(const char *filePath){
     int fd = -1;
@@ -67,7 +68,7 @@ struct KeyBagBlobItem{
     unsigned int len;
     union{
         unsigned int intvalue;
-        unsigned char bytes[];
+        unsigned char bytes[1];
     } data;
 };
 

@@ -80,9 +80,16 @@ int main_r(int argc, const char * argv[]) {
     KeyBag kb{};
     uint8_t uid[0x10]{}; //128bit AES
 
+    int classKeySelector = -1;
+    
     if (argc < 3) {
-        info("uido2hashcat: <uid key hex> <kbdump path>\n");
+        info("uido2hashcat: <uid key hex> <kbdump path> [optional: class key selector]\n");
         return -1;
+    }
+    
+    if (argc >= 4) {
+        classKeySelector = atoi(argv[3]);
+        info("Manually selecting class key %d",classKeySelector);
     }
         
     {
@@ -197,15 +204,19 @@ int main_r(int argc, const char * argv[]) {
     printf("$%u",kb.iter);
     //class keys
     for (int i=0; i < kb.numKeys; i++){
+        if (classKeySelector != -1) {
+            if (i != classKeySelector) continue;
+            retassure(kb.keys[i].wrap & 2, "ERROR: selected class key %d is not wrapped!",i);
+        }
         if (kb.keys[i].wrap & 2){
             //only print classkeys which need unwrapping!
             printf("$");
             for (int j=0; j<sizeof(kb.keys[0].wpky); j++) {
                 printf("%02x",kb.keys[i].wpky[j]);
             }
+            printf("\n");
+            return 0;
         }
     }
-    printf("\n");
-    
-    return 0;
+    reterror("No matching class key printed");
 }
